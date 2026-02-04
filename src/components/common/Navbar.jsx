@@ -1,12 +1,21 @@
-import { Link } from 'react-router-dom'
-import { Menu, X, Stethoscope } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Menu, X, Stethoscope, LogOut, User } from 'lucide-react'
 import { useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { isAuthenticated, user, logout } = useAuth()
+  const navigate = useNavigate()
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
+  }
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+    setIsMenuOpen(false)
   }
 
   return (
@@ -39,16 +48,36 @@ function Navbar() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/login">
-              <button className="text-primary hover:text-primary-dark transition-colors duration-300 font-medium">
-                Login
-              </button>
-            </Link>
-            <Link to="/register">
-              <button className="btn-primary">
-                Register
-              </button>
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to={user?.role === 'patient' ? '/patient/dashboard' : '/doctor/dashboard'}>
+                  <button className="flex items-center gap-2 text-primary hover:text-primary-dark transition-colors duration-300 font-medium">
+                    <User className="h-5 w-5" />
+                    {user?.name}
+                  </button>
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-gray-700 hover:text-error transition-colors duration-300 font-medium"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <button className="text-primary hover:text-primary-dark transition-colors duration-300 font-medium">
+                    Login
+                  </button>
+                </Link>
+                <Link to="/register">
+                  <button className="btn-primary">
+                    Register
+                  </button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -96,13 +125,37 @@ function Navbar() {
           >
             About
           </Link>
+          
           <div className="pt-4 space-y-2">
-            <Link to="/login" onClick={toggleMenu}>
-              <button className="w-full btn-secondary">Login</button>
-            </Link>
-            <Link to="/register" onClick={toggleMenu}>
-              <button className="w-full btn-primary">Register</button>
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link 
+                  to={user?.role === 'patient' ? '/patient/dashboard' : '/doctor/dashboard'} 
+                  onClick={toggleMenu}
+                >
+                  <button className="w-full btn-secondary flex items-center justify-center gap-2">
+                    <User className="h-5 w-5" />
+                    {user?.name}
+                  </button>
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="w-full btn-danger flex items-center justify-center gap-2"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={toggleMenu}>
+                  <button className="w-full btn-secondary">Login</button>
+                </Link>
+                <Link to="/register" onClick={toggleMenu}>
+                  <button className="w-full btn-primary">Register</button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
