@@ -4,9 +4,11 @@ import FindHospital from './pages/FindHospital'
 import FindDoctor from './pages/FindDoctor'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import BookAppointment from './pages/BookAppointment'
 import PatientDashboard from './pages/patient/PatientDashboard'
 import PatientProfile from './pages/patient/PatientProfile'
 import PatientAppointments from './pages/patient/PatientAppointments'
+import MedicalRecords from './pages/patient/MedicalRecords'
 import DoctorDashboard from './pages/doctor/DoctorDashboard'
 import DoctorProfile from './pages/doctor/DoctorProfile'
 import ProtectedRoute from './components/auth/ProtectedRoute'
@@ -19,6 +21,7 @@ function AppRoutes() {
       <Route path="/find-doctor" element={<FindDoctor />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/book-appointment/:doctorId" element={<BookAppointment />} />
       
       {/* Patient Routes */}
       <Route
@@ -42,6 +45,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute requiredRole="patient">
             <PatientAppointments />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/patient/medical-records"
+        element={
+          <ProtectedRoute requiredRole="patient">
+            <MedicalRecords />
           </ProtectedRoute>
         }
       />

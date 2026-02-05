@@ -220,4 +220,3 @@ function DoctorProfile() {
 }
 
 export default DoctorProfile
-
