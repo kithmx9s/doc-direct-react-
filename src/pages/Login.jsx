@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, User, Stethoscope } from 'lucide-react'
+import { Mail, Lock, User, Stethoscope, Shield } from 'lucide-react'
 import Layout from '../components/common/Layout'
 import Input from '../components/common/Input'
 import Button from '../components/common/Button'
@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [userType, setUserType] = useState('patient') // patient or doctor
+  const [userType, setUserType] = useState('patient') // patient, doctor, or admin
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,7 +22,6 @@ function Login() {
       ...prev,
       [name]: value,
     }))
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -54,20 +53,24 @@ function Login() {
     e.preventDefault()
 
     if (validateForm()) {
-      // Simulate login (in real app, this would call an API)
       const userData = {
         email: formData.email,
         role: userType,
-        name: userType === 'patient' ? 'John Doe' : 'Dr. John Doe',
+        name: userType === 'patient' 
+          ? 'John Doe' 
+          : userType === 'doctor' 
+          ? 'Dr. John Doe'
+          : 'Admin User',
       }
 
       login(userData)
 
-      // Navigate based on user type
       if (userType === 'patient') {
         navigate('/patient/dashboard')
       } else if (userType === 'doctor') {
         navigate('/doctor/dashboard')
+      } else if (userType === 'admin') {
+        navigate('/admin/dashboard')
       }
     }
   }
@@ -83,11 +86,11 @@ function Login() {
 
           <div className="bg-white rounded-2xl shadow-card-hover p-8 animate-slideInUp">
             {/* User Type Selection */}
-            <div className="flex gap-4 mb-8">
+            <div className="flex flex-col gap-3 mb-8">
               <button
                 type="button"
                 onClick={() => setUserType('patient')}
-                className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+                className={`py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
                   userType === 'patient'
                     ? 'bg-primary text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -99,7 +102,7 @@ function Login() {
               <button
                 type="button"
                 onClick={() => setUserType('doctor')}
-                className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+                className={`py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
                   userType === 'doctor'
                     ? 'bg-doctor text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -107,6 +110,18 @@ function Login() {
               >
                 <Stethoscope className="h-5 w-5" />
                 Doctor
+              </button>
+              <button
+                type="button"
+                onClick={() => setUserType('admin')}
+                className={`py-4 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
+                  userType === 'admin'
+                    ? 'bg-gray-900 text-white shadow-lg scale-105'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <Shield className="h-5 w-5" />
+                Admin
               </button>
             </div>
 
