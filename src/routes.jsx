@@ -1,3 +1,4 @@
+
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import FindHospital from './pages/FindHospital'
@@ -8,6 +9,9 @@ import BookAppointment from './pages/BookAppointment'
 import HospitalRegistration from './pages/HospitalRegistration'
 import DoctorDetail from './pages/DoctorDetail'
 import HospitalDetail from './pages/HospitalDetail'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import NotFound from './pages/NotFound'
 import PatientDashboard from './pages/patient/PatientDashboard'
 import PatientProfile from './pages/patient/PatientProfile'
 import PatientAppointments from './pages/patient/PatientAppointments'
@@ -30,6 +34,8 @@ function AppRoutes() {
       <Route path="/hospital-registration" element={<HospitalRegistration />} />
       <Route path="/doctor/:doctorId" element={<DoctorDetail />} />
       <Route path="/hospital/:hospitalId" element={<HospitalDetail />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       
       {/* Patient Routes */}
       <Route
@@ -92,9 +98,11 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* 404 - Must be last */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }
 
 export default AppRoutes
-
